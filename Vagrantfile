@@ -10,23 +10,23 @@ Vagrant.configure("2") do |config|
 end
 
 $script = <<SCRIPT
-sudo yum update -y
-sudo yum install -y ntp git wget curl zip unzip vim tig jq tree
-sudo pip install -U awscli
+sudo yum update -y -q
+sudo yum install -y -q ntp git wget curl zip unzip vim tig jq tree
+sudo pip install -U -q awscli
 
 # my dotfiles
-curl -sS -L raw.github.com/koooge/dotfiles/master/install.sh | bash
+curl -sS -L raw.github.com/koooge/dotfiles/master/install.sh | bash &> /dev/null
 
 # node
 NVM_VERSION=v0.33.8
 NODE_VERSION=v6.10.3
-curl -o- https://raw.githubusercontent.com/creationix/nvm/${NVM_VERSION}/install.sh | bash
+curl -sS -o- https://raw.githubusercontent.com/creationix/nvm/${NVM_VERSION}/install.sh | bash
 cat << EOF >> ~/.bashrc
 export NVM_DIR=~/.nvm
 [ -s "${NVM_DIR}/nvm.sh" ] && . "${NVM_DIR}/nvm.sh"
 EOF
 source ~/.bashrc
-nvm install ${NODE_VERSION}
+nvm install ${NODE_VERSION} &> /dev/null
 nvm use ${NODE_VERSION}
 nvm alias default ${NODE_VERSION}
 SCRIPT
